@@ -1,14 +1,20 @@
 package handler
 
-type UserRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+type RegisterRequest struct {
+	FirstName     string `json:"firstname" form:"firstname"`
+	LastName    string `json:"lastname" form:"lastname"`
+	Gender string `json:"gender" form:"gender"`
+	Hp string `json:"hp" form:"hp"`
+	Email string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
 }
 
-type UserResponse struct {
+type RegisterResponse struct {
 	ID    uint   `json:"id"`
-	Name  string `json:"name"`
+	FirstName     string `json:"firstname"`
+	LastName    string `json:"lastname"`
+	Gender string `json:"gender"`
+	Hp string `json:"hp"`
 	Email string `json:"email"`
 }
 
@@ -19,7 +25,11 @@ type LoginRequest struct {
 
 type LoginResponse struct {
 	ID    uint   `json:"id"`
-	Name  string `json:"nama"`
+	FirstName     string `json:"firstname"`
+	LastName    string `json:"lastname"`
+	Gender string `json:"gender"`
+	Hp string `json:"hp"`
 	Email string `json:"email"`
+	Image string `json:"image"`
 	Token string `json:"token"`
 }
