@@ -1,5 +1,5 @@
 # Social Media Apps Project (Golang)
-![SCrenshot](helper\images\2023-12-03.png)
+![SCrenshot](helper/images/2023-12-03.png)
 ## Latar Belakang
 Social Media Apps adalah aplikasi yang memungkinkan pengguna untuk berbagi cerita, artikel, atau foto. Sebagai seorang Software Engineer, tugas Anda adalah mengembangkan Social Media App ini.
 
@@ -8,8 +8,8 @@ Proyek ini menggunakan Golang, sebuah bahasa pemrograman yang kuat dan efisien. 
 
 ## Pembuat
 
-- **LENDRA SYAPUTRA 1** - BE 19 ALTA
-- **GALIH PRAYOGA 2** - BE 19 ALTA
+- **LENDRA SYAPUTRA** - BE 19 ALTA
+- **GALIH PRAYOGA** - BE 19 ALTA
 
 
 ## Cara Menjalankan
