@@ -1,28 +1,26 @@
-Social Media Apps Project (Golang)
+# Social Media Apps Project (Golang)
 
-Latar Belakang
+## Latar Belakang
+Social Media Apps adalah aplikasi yang memungkinkan pengguna untuk berbagi cerita, artikel, atau foto. Sebagai seorang Software Engineer, tugas Anda adalah mengembangkan Social Media App ini.
 
-Social Media Apps adalah sebuah aplikasi yang digunakan untuk berbagi cerita, artikel, atau foto. Aplikasi ini dikembangkan oleh seorang Software Engineer dengan menggunakan bahasa pemrograman Golang.
+## Fitur Prioritas MVP
+Proyek ini dimulai dengan fokus pada fitur-fitur berikut untuk memenuhi kriteria Minimum Viable Product (MVP):
 
-Fitur
+1. Pengguna dapat melakukan operasi create, read, update, dan delete pada data Pengguna.
+2. Pengguna yang telah membuat akun (registrasi) dapat melakukan login.
+3. Pengguna dapat melakukan operasi pada posting (cerita, artikel, atau foto).
+4. Operasi post, edit, dan delete hanya dapat dilakukan oleh Pengguna yang sudah login. Operasi read dapat dilakukan oleh semua Pengguna tanpa login.
+5. Pengguna dapat melakukan operasi komentar pada posting.
+6. Untuk menulis dan menghapus komentar, pengguna perlu login terlebih dahulu.
+7. Pengguna tidak perlu login untuk melihat komentar.
 
-Aplikasi ini memiliki fitur-fitur berikut:
+## Teknologi
+Proyek ini menggunakan Golang, sebuah bahasa pemrograman yang kuat dan efisien. Golang dipilih karena performanya yang cepat, dukungan konkurensi, dan ekosistem library yang kuat.
 
-Manajemen pengguna
-Pengguna dapat melakukan operasi create, read, update, dan delete pada data pengguna.
-Pengguna yang telah terdaftar dapat melakukan login.
-Manajemen posting
-Pengguna yang telah login dapat melakukan operasi post, edit, dan delete pada posting.
-Semua pengguna dapat melihat posting, tanpa harus login.
-Komentar
-Pengguna yang telah login dapat menulis komentar pada posting.
-Semua pengguna dapat melihat komentar, tanpa harus login.
-Teknologi
-
-Aplikasi ini menggunakan bahasa pemrograman Golang. Golang adalah pilihan yang baik untuk aplikasi ini karena performanya yang cepat, dukungan yang baik untuk konkurensi, dan ekosistem library yang kuat.
-
-Cara Menjalankan
-
-Untuk menjalankan proyek ini, Anda perlu memiliki Golang yang terinstal di sistem Anda. Setelah itu, Anda dapat menjalankan aplikasi dengan perintah berikut di terminal:
-
-go run main.go
+## Cara Menjalankan
+1. Pastikan Golang sudah terinstal di sistem Anda.
+2. Salin repository ini ke direktori lokal Anda.
+3. Buka terminal dan arahkan ke direktori proyek.
+4. Jalankan aplikasi dengan perintah berikut:
+   ```bash
+   go run main.go
