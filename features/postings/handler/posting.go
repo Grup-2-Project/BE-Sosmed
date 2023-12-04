@@ -5,7 +5,9 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
+
 	"github.com/cloudinary/cloudinary-go"
 	"github.com/cloudinary/cloudinary-go/api/uploader"
 	"github.com/go-playground/validator/v10"
@@ -33,7 +35,7 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 		}
 		
 		var urlCloudinary = "cloudinary://533421842888945:Oish5XyXkCiiV6oTW2sEo0lEkGg@dlxvvuhph"
-		
+
 		fileHeader, err := c.FormFile("gambar")
 		
 		validate := validator.New(validator.WithRequiredStructEnabled())
@@ -119,3 +121,70 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
     }
 }
 
+func (pc *PostingHandler) Update() echo.HandlerFunc {
+    return func(c echo.Context) error {
+        postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+        if err != nil {
+            return c.JSON(http.StatusBadRequest, map[string]interface{}{
+                "message": "invalid post ID",
+            })
+        }
+
+        var updateRequest = new(UpdateRequest)
+        if err := c.Bind(updateRequest); err != nil {
+            return c.JSON(http.StatusBadRequest, map[string]interface{}{
+                "message": "invalid update request",
+            })
+        }
+
+        updatePosting := postings.Posting{
+            ID:      uint(postID),
+            Artikel: updateRequest.Artikel,
+            Gambar:  updateRequest.Gambar,
+        }
+
+        updatedPost, err := pc.s.UpdatePosting(c.Get("user").(*gojwt.Token), updatePosting)
+        if err != nil {
+            c.Logger().Error("Error updating post:", err.Error())
+            return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+                "message": "error updating post",
+            })
+        }
+
+        var response = UpdateResponse{
+            ID:      updatedPost.ID,
+            Artikel: updatedPost.Artikel,
+            Gambar:  updatedPost.Gambar,
+            UserID:  updatedPost.UserID,
+        }
+
+        return c.JSON(http.StatusOK, map[string]interface{}{
+            "message": "success updating post",
+            "data":    response,
+        })
+    }
+
+}
+
+func (pc *PostingHandler) Delete() echo.HandlerFunc {
+    return func(c echo.Context) error {
+        postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+        if err != nil {
+            return c.JSON(http.StatusBadRequest, map[string]interface{}{
+                "message": "invalid post ID",
+            })
+        }
+
+        err = pc.s.DeletePosting(c.Get("user").(*gojwt.Token), uint(postID))
+        if err != nil {
+            c.Logger().Error("Error deleting post:", err.Error())
+            return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+                "message": "error deleting post",
+            })
+        }
+
+        return c.JSON(http.StatusOK, map[string]interface{}{
+            "message": "success deleting post",
+        })
+    }
+}

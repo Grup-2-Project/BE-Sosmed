@@ -46,3 +46,35 @@ func (ps *PostingService) SemuaPosting() ([]postings.Posting, error) {
 
 	return posts, nil
 }
+
+
+func (ps *PostingService) UpdatePosting(token *golangjwt.Token, updatePosting postings.Posting) (postings.Posting, error) {
+	userID, err := jwt.ExtractToken(token)
+	if err != nil {
+		return postings.Posting{}, err
+	}
+
+
+	updatedPost, err := ps.m.UpdatePost(userID, updatePosting)
+	if err != nil {
+		return postings.Posting{}, err
+	}
+
+	return updatedPost, nil
+}
+
+
+
+func (ps *PostingService) DeletePosting(token *golangjwt.Token, postID uint) (error) {
+    userID, err := jwt.ExtractToken(token)
+    if err != nil {
+        return err
+    }
+
+    err = ps.m.DeletePost(userID, postID)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
