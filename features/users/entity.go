@@ -13,7 +13,6 @@ type User struct {
 	Email string
 	Password string
 	Image string
-	
 }
 
 type Handler interface {

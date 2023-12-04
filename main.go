@@ -2,6 +2,9 @@ package main
 
 import (
 	"BE-Sosmed/config"
+	ph "BE-Sosmed/features/postings/handler"
+	pr "BE-Sosmed/features/postings/repository"
+	ps "BE-Sosmed/features/postings/service"
 	uh "BE-Sosmed/features/users/handler"
 	ur "BE-Sosmed/features/users/repository"
 	us "BE-Sosmed/features/users/services"
@@ -29,14 +32,18 @@ e := echo.New()
 		return
 	}
 
-	db.AutoMigrate(&ur.UserModel{})
+	db.AutoMigrate(&ur.UserModel{}, &pr.PostingModel{})
 
 	userRepo := ur.New(db)
 	hash := enkrip.New()
 	userService := us.New(userRepo, hash)
 	userHandler := uh.New(userService)
 
-	routes.InitRoute(e, userHandler)
+	postingRepo := pr.New(db)
+	postingService := ps.New(postingRepo)
+	postingHandler := ph.New(postingService)
+
+	routes.InitRoute(e, userHandler, postingHandler)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"BE-Sosmed/features/postings/repository"
 	"BE-Sosmed/features/users"
 
 	"gorm.io/gorm"
@@ -15,7 +16,7 @@ type UserModel struct {
 	Email string
 	Password string
 	Image string
-	// Coupons  []repository.CouponModel `gorm:"foreignKey:UserID"`
+	Postings  []repository.PostingModel `gorm:"foreignKey:UserID"`
 }
 
 type userQuery struct {
