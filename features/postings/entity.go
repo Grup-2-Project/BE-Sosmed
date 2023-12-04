@@ -15,12 +15,15 @@ type Posting struct {
 
 type Handler interface {
 	Add() echo.HandlerFunc
+	GetAll() echo.HandlerFunc
 }
 
 type Service interface {
 	TambahPosting(token *jwt.Token, newPosting Posting) (Posting, error)
+	SemuaPosting() ([]Posting, error)
 }
 
 type Repository interface {
 	InsertPosting(userID uint, newPosting Posting) (Posting, error)
+	GetAllPost() ([]Posting, error)
 }

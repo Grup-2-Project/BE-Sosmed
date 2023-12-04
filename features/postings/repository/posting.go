@@ -36,3 +36,23 @@ func (pq *postingQuery) InsertPosting(userID uint, newPosting postings.Posting) 
 
 	return newPosting, nil
 }
+
+func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {
+	var posts []PostingModel
+
+	if err := pq.db.Order("created_at desc").Find(&posts).Error; err != nil {
+		return nil, err
+	}
+
+	var result []postings.Posting
+	for _, post := range posts {
+		result = append(result, postings.Posting{
+			ID:     post.ID,
+			Artikel: post.Artikel,
+			Gambar:  post.Gambar,
+			UserID:  post.UserID,
+		})
+	}
+
+	return result, nil
+}

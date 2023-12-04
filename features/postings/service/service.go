@@ -29,10 +29,20 @@ func (ps *PostingService) TambahPosting(token *golangjwt.Token, newPosting posti
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate") {
-			return postings.Posting{}, errors.New("kupon sudah ada pada sistem")
+			return postings.Posting{}, errors.New("posting sudah ada pada sistem")
 		}
 		return postings.Posting{}, errors.New("terjadi kesalahan server")
 	}
 
 	return result, nil
+}
+
+func (ps *PostingService) SemuaPosting() ([]postings.Posting, error) {
+	posts, err := ps.m.GetAllPost()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
 }

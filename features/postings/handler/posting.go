@@ -31,16 +31,11 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 				"message": "input yang diberikan tidak sesuai",
 			})
 		}
-
-		fileHeader, err := c.FormFile("gambar")
-		if input.Artikel == "" && err == nil {
-			return c.JSON(http.StatusBadRequest, map[string]any{
-				"message": "Anda harus memasukkan artikel",
-			})
-		}
-
+		
 		var urlCloudinary = "cloudinary://533421842888945:Oish5XyXkCiiV6oTW2sEo0lEkGg@dlxvvuhph"
-
+		
+		fileHeader, err := c.FormFile("gambar")
+		
 		validate := validator.New(validator.WithRequiredStructEnabled())
 
 		if err := validate.Struct(input); err != nil {
@@ -94,3 +89,33 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 		})
 	}
 }
+
+func (pc *PostingHandler) GetAll() echo.HandlerFunc {
+    return func(c echo.Context) error {
+        posts, err := pc.s.SemuaPosting()
+
+        if err != nil {
+            c.Logger().Error("Error getting all posts:", err.Error())
+            return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+                "message": "Error getting all posts",
+            })
+        }
+
+        var response = make([]GetResponse, len(posts))
+
+        for i, post := range posts {
+            response[i] = GetResponse{
+                ID:      post.ID,
+                Artikel: post.Artikel,
+                Gambar:  post.Gambar,
+                UserID:  post.UserID,
+            }
+        }
+
+        return c.JSON(http.StatusOK, map[string]interface{}{
+            "message": "success get all posts",
+            "data":    response,
+        })
+    }
+}
+

@@ -27,5 +27,6 @@ func routeUser(e *echo.Echo, uh users.Handler) {
 }
 
 func routePosting(e *echo.Echo, ph postings.Handler) {
-	e.POST("/posting", ph.Add(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.POST("/post", ph.Add(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.GET("/post", ph.GetAll())
 }
