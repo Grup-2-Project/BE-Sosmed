@@ -21,6 +21,9 @@ func InitRoute(e *echo.Echo, uh users.Handler, ph postings.Handler) {
 func routeUser(e *echo.Echo, uh users.Handler) {
 	e.POST("/users", uh.Register())
 	e.POST("/login", uh.Login())
+	e.GET("/users/:id", uh.ReadById(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.PUT("/users", uh.Update(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.DELETE("/users", uh.Delete(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 }
 
 func routePosting(e *echo.Echo, ph postings.Handler) {

@@ -1,10 +1,11 @@
 package service
 
 import (
-	"BE-Sosmed/helper/jwt"
 	"BE-Sosmed/features/postings"
+	"BE-Sosmed/helper/jwt"
 	"errors"
 	"strings"
+
 	golangjwt "github.com/golang-jwt/jwt/v5"
 )
 
