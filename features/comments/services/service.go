@@ -29,7 +29,7 @@ func (cs *CommentService) CreateComment(token *golangjwt.Token, newComment comme
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate") {
-			return comments.Comment{}, errors.New("posting sudah ada pada sistem")
+			return comments.Comment{}, errors.New("komentar sudah ada di dalam sistem")
 		}
 		return comments.Comment{}, errors.New("terjadi kesalahan server")
 	}
