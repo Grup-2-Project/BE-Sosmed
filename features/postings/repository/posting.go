@@ -1,7 +1,8 @@
 package repository
 
 import (
-	"BE-Sosmed/features/comments/repository"
+	"BE-Sosmed/features/comments"
+	cr "BE-Sosmed/features/comments/repository"
 	"BE-Sosmed/features/postings"
 	"errors"
 
@@ -13,7 +14,7 @@ type PostingModel struct {
 	Artikel  string
 	Gambar   string
 	UserID   uint
-	Comments []repository.CommentModel `gorm:"foreignKey:PostID"`
+	Comments []cr.CommentModel `gorm:"foreignKey:PostID"`
 }
 
 type postingQuery struct {
@@ -39,6 +40,26 @@ func (pq *postingQuery) InsertPosting(userID uint, newPosting postings.Posting) 
 	newPosting.ID = inputData.ID
 
 	return newPosting, nil
+}
+
+func (pq *postingQuery) GetComment(PostID uint) ([]comments.Comment, error) {
+	var commentModels []cr.CommentModel
+
+	if err := pq.db.Where("post_id = ?", PostID).Find(&commentModels).Error; err != nil {
+		return nil, err
+	}
+
+	var result []comments.Comment
+	for _, model := range commentModels {
+		result = append(result, comments.Comment{
+			ID:       model.ID,
+			Komentar: model.Komentar,
+			PostID:   model.PostID,
+			UserID:   model.UserID,
+		})
+	}
+
+	return result, nil
 }
 
 func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {

@@ -33,11 +33,11 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 				"message": "input yang diberikan tidak sesuai",
 			})
 		}
-		
+
 		var urlCloudinary = "cloudinary://533421842888945:Oish5XyXkCiiV6oTW2sEo0lEkGg@dlxvvuhph"
 
 		fileHeader, err := c.FormFile("gambar")
-		
+
 		validate := validator.New(validator.WithRequiredStructEnabled())
 
 		if err := validate.Struct(input); err != nil {
@@ -93,98 +93,117 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 }
 
 func (pc *PostingHandler) GetAll() echo.HandlerFunc {
-    return func(c echo.Context) error {
-        posts, err := pc.s.SemuaPosting()
+	return func(c echo.Context) error {
+		posts, err := pc.s.SemuaPosting()
 
-        if err != nil {
-            c.Logger().Error("Error getting all posts:", err.Error())
-            return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-                "message": "Error getting all posts",
-            })
-        }
+		if err != nil {
+			c.Logger().Error("Error getting all posts:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Error getting all posts",
+			})
+		}
 
-        var response = make([]GetResponse, len(posts))
+		var response = make([]GetResponse, len(posts))
 
-        for i, post := range posts {
-            response[i] = GetResponse{
-                ID:      post.ID,
-                Artikel: post.Artikel,
-                Gambar:  post.Gambar,
-                UserID:  post.UserID,
-            }
-        }
+		for i, post := range posts {
+			comments, err := pc.s.AmbilComment(post.ID)
+			if err != nil {
+				c.Logger().Error("Error getting comments for post:", err.Error())
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+					"message": "Error getting comments for post",
+				})
+			}
 
-        return c.JSON(http.StatusOK, map[string]interface{}{
-            "message": "success get all posts",
-            "data":    response,
-        })
-    }
+			var commentInfo = make([]CommentInfo, len(comments))
+			for j, comment := range comments {
+				commentInfo[j] = CommentInfo{
+					ID:       comment.ID,
+					Komentar: comment.Komentar,
+					UserID:   comment.UserID,
+					PostID:   comment.PostID,
+				}
+			}
+
+			response[i] = GetResponse{
+				ID:       post.ID,
+				Artikel:  post.Artikel,
+				Gambar:   post.Gambar,
+				UserID:   post.UserID,
+				Comments: commentInfo,
+			}
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success get all posts",
+			"data":    response,
+		})
+	}
 }
 
 func (pc *PostingHandler) Update() echo.HandlerFunc {
-    return func(c echo.Context) error {
-        postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
-        if err != nil {
-            return c.JSON(http.StatusBadRequest, map[string]interface{}{
-                "message": "invalid post ID",
-            })
-        }
+	return func(c echo.Context) error {
+		postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid post ID",
+			})
+		}
 
-        var updateRequest = new(UpdateRequest)
-        if err := c.Bind(updateRequest); err != nil {
-            return c.JSON(http.StatusBadRequest, map[string]interface{}{
-                "message": "invalid update request",
-            })
-        }
+		var updateRequest = new(UpdateRequest)
+		if err := c.Bind(updateRequest); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid update request",
+			})
+		}
 
-        updatePosting := postings.Posting{
-            ID:      uint(postID),
-            Artikel: updateRequest.Artikel,
-            Gambar:  updateRequest.Gambar,
-        }
+		updatePosting := postings.Posting{
+			ID:      uint(postID),
+			Artikel: updateRequest.Artikel,
+			Gambar:  updateRequest.Gambar,
+		}
 
-        updatedPost, err := pc.s.UpdatePosting(c.Get("user").(*gojwt.Token), updatePosting)
-        if err != nil {
-            c.Logger().Error("Error updating post:", err.Error())
-            return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-                "message": "error updating post",
-            })
-        }
+		updatedPost, err := pc.s.UpdatePosting(c.Get("user").(*gojwt.Token), updatePosting)
+		if err != nil {
+			c.Logger().Error("Error updating post:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "error updating post",
+			})
+		}
 
-        var response = UpdateResponse{
-            ID:      updatedPost.ID,
-            Artikel: updatedPost.Artikel,
-            Gambar:  updatedPost.Gambar,
-            UserID:  updatedPost.UserID,
-        }
+		var response = UpdateResponse{
+			ID:      updatedPost.ID,
+			Artikel: updatedPost.Artikel,
+			Gambar:  updatedPost.Gambar,
+			UserID:  updatedPost.UserID,
+		}
 
-        return c.JSON(http.StatusOK, map[string]interface{}{
-            "message": "success updating post",
-            "data":    response,
-        })
-    }
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success updating post",
+			"data":    response,
+		})
+	}
 
 }
 
 func (pc *PostingHandler) Delete() echo.HandlerFunc {
-    return func(c echo.Context) error {
-        postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
-        if err != nil {
-            return c.JSON(http.StatusBadRequest, map[string]interface{}{
-                "message": "invalid post ID",
-            })
-        }
+	return func(c echo.Context) error {
+		postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid post ID",
+			})
+		}
 
-        err = pc.s.DeletePosting(c.Get("user").(*gojwt.Token), uint(postID))
-        if err != nil {
-            c.Logger().Error("Error deleting post:", err.Error())
-            return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-                "message": "error deleting post",
-            })
-        }
+		err = pc.s.DeletePosting(c.Get("user").(*gojwt.Token), uint(postID))
+		if err != nil {
+			c.Logger().Error("Error deleting post:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "error deleting post",
+			})
+		}
 
-        return c.JSON(http.StatusOK, map[string]interface{}{
-            "message": "success deleting post",
-        })
-    }
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success deleting post",
+		})
+	}
 }

@@ -12,10 +12,18 @@ type AddResponse struct {
 }
 
 type GetResponse struct {
-	ID      uint   `json:"id"`
-	Artikel string `json:"artikel"`
-	Gambar  string `json:"gambar"`
-	UserID  uint   `json:"user_id"`
+	ID       uint          `json:"id"`
+	Artikel  string        `json:"artikel"`
+	Gambar   string        `json:"gambar"`
+	UserID   uint          `json:"user_id"`
+	Comments []CommentInfo `json:"comments"`
+}
+
+type CommentInfo struct {
+	ID       uint   `json:"comment_id"`
+	Komentar string `json:"komentar"`
+	UserID   uint   `json:"user_id"`
+	PostID   uint   `json:"post_id"`
 }
 
 type UpdateRequest struct {
