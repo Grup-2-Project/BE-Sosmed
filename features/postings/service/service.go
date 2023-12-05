@@ -1,6 +1,7 @@
 package service
 
 import (
+	"BE-Sosmed/features/comments"
 	"BE-Sosmed/features/postings"
 	"BE-Sosmed/helper/jwt"
 	"errors"
@@ -37,6 +38,16 @@ func (ps *PostingService) TambahPosting(token *golangjwt.Token, newPosting posti
 	return result, nil
 }
 
+func (ps *PostingService) AmbilComment(PostID uint) ([]comments.Comment, error) {
+	result, err := ps.m.GetComment(PostID)
+
+	if err != nil {
+		return nil, errors.New("terjadi kesalahan server")
+	}
+
+	return result, nil
+}
+
 func (ps *PostingService) SemuaPosting() ([]postings.Posting, error) {
 	posts, err := ps.m.GetAllPost()
 
@@ -47,13 +58,11 @@ func (ps *PostingService) SemuaPosting() ([]postings.Posting, error) {
 	return posts, nil
 }
 
-
 func (ps *PostingService) UpdatePosting(token *golangjwt.Token, updatePosting postings.Posting) (postings.Posting, error) {
 	userID, err := jwt.ExtractToken(token)
 	if err != nil {
 		return postings.Posting{}, err
 	}
-
 
 	updatedPost, err := ps.m.UpdatePost(userID, updatePosting)
 	if err != nil {
@@ -63,18 +72,16 @@ func (ps *PostingService) UpdatePosting(token *golangjwt.Token, updatePosting po
 	return updatedPost, nil
 }
 
+func (ps *PostingService) DeletePosting(token *golangjwt.Token, postID uint) error {
+	userID, err := jwt.ExtractToken(token)
+	if err != nil {
+		return err
+	}
 
+	err = ps.m.DeletePost(userID, postID)
+	if err != nil {
+		return err
+	}
 
-func (ps *PostingService) DeletePosting(token *golangjwt.Token, postID uint) (error) {
-    userID, err := jwt.ExtractToken(token)
-    if err != nil {
-        return err
-    }
-
-    err = ps.m.DeletePost(userID, postID)
-    if err != nil {
-        return err
-    }
-
-    return nil
+	return nil
 }
