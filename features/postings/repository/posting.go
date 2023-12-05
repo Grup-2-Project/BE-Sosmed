@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"BE-Sosmed/features/comments/repository"
 	"BE-Sosmed/features/postings"
 	"errors"
 
@@ -9,9 +10,10 @@ import (
 
 type PostingModel struct {
 	gorm.Model
-	Artikel 	string
-	Gambar      string
-	UserID      uint
+	Artikel  string
+	Gambar   string
+	UserID   uint
+	Comments []repository.CommentModel `gorm:"foreignKey:PostID"`
 }
 
 type postingQuery struct {
@@ -49,7 +51,7 @@ func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {
 	var result []postings.Posting
 	for _, post := range posts {
 		result = append(result, postings.Posting{
-			ID:     post.ID,
+			ID:      post.ID,
 			Artikel: post.Artikel,
 			Gambar:  post.Gambar,
 			UserID:  post.UserID,
@@ -59,21 +61,16 @@ func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {
 	return result, nil
 }
 
-
-
 func (pq *postingQuery) UpdatePost(userID uint, updatePosting postings.Posting) (postings.Posting, error) {
 	var existingPost PostingModel
-
 
 	if err := pq.db.First(&existingPost, updatePosting.ID).Error; err != nil {
 		return postings.Posting{}, errors.New("posting not found")
 	}
 
-
 	if existingPost.UserID != userID {
 		return postings.Posting{}, errors.New("you are not authorized to update this post")
 	}
-
 
 	if err := pq.db.Model(&existingPost).Updates(PostingModel{
 		Artikel: updatePosting.Artikel,
@@ -82,9 +79,8 @@ func (pq *postingQuery) UpdatePost(userID uint, updatePosting postings.Posting) 
 		return postings.Posting{}, err
 	}
 
-
 	updatedPost := postings.Posting{
-		ID:     existingPost.ID,
+		ID:      existingPost.ID,
 		Artikel: existingPost.Artikel,
 		Gambar:  existingPost.Gambar,
 		UserID:  existingPost.UserID,
@@ -94,21 +90,19 @@ func (pq *postingQuery) UpdatePost(userID uint, updatePosting postings.Posting) 
 }
 
 func (pq *postingQuery) DeletePost(userID uint, postID uint) error {
-    var existingPost PostingModel
+	var existingPost PostingModel
 
+	if err := pq.db.First(&existingPost, postID).Error; err != nil {
+		return errors.New("posting not found")
+	}
 
-    if err := pq.db.First(&existingPost, postID).Error; err != nil {
-        return errors.New("posting not found")
-    }
+	if existingPost.UserID != userID {
+		return errors.New("you are not authorized to delete this post")
+	}
 
-  
-    if existingPost.UserID != userID {
-        return errors.New("you are not authorized to delete this post")
-    }
+	if err := pq.db.Delete(&existingPost).Error; err != nil {
+		return err
+	}
 
-    if err := pq.db.Delete(&existingPost).Error; err != nil {
-        return err
-    }
-
-    return nil
+	return nil
 }

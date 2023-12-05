@@ -1,7 +1,8 @@
 package repository
 
 import (
-	"BE-Sosmed/features/postings/repository"
+	cr "BE-Sosmed/features/comments/repository"
+	pr "BE-Sosmed/features/postings/repository"
 	"BE-Sosmed/features/users"
 
 	"gorm.io/gorm"
@@ -16,8 +17,9 @@ type UserModel struct {
 	Email     string `gorm:"unique"`
 	Password  string
 	Image     string
-	Username  string `gorm:"unique"`
-	Postings  []repository.PostingModel `gorm:"foreignKey:UserID"`
+	Username  string            `gorm:"unique"`
+	Postings  []pr.PostingModel `gorm:"foreignKey:UserID"`
+	Comments  []cr.CommentModel `gorm:"foreignKey:UserID"`
 }
 
 type userQuery struct {
@@ -107,9 +109,6 @@ func (uq *userQuery) UpdateUser(UserID uint, updatedUser users.User) (users.User
 }
 
 func (uq *userQuery) DeleteUser(UserID uint) error {
-	// Validasi atau logika lainnya sesuai kebutuhan
-
-	// Hapus user dari database berdasarkan ID
 	if err := uq.db.Delete(&UserModel{}, UserID).Error; err != nil {
 		return err
 	}

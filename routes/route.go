@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"BE-Sosmed/features/comments"
 	"BE-Sosmed/features/postings"
 	"BE-Sosmed/features/users"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, ph postings.Handler) {
+func InitRoute(e *echo.Echo, uh users.Handler, ph postings.Handler, ch comments.Handler) {
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.Use(middleware.CORS())
@@ -17,6 +18,7 @@ func InitRoute(e *echo.Echo, uh users.Handler, ph postings.Handler) {
 
 	routeUser(e, uh)
 	routePosting(e, ph)
+	routeComment(e, ch)
 }
 
 func routeUser(e *echo.Echo, uh users.Handler) {
@@ -32,4 +34,10 @@ func routePosting(e *echo.Echo, ph postings.Handler) {
 	e.GET("/post", ph.GetAll())
 	e.PUT("/post/:id", ph.Update(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 	e.DELETE("/post/:id", ph.Delete(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+}
+
+func routeComment(e *echo.Echo, ch comments.Handler) {
+	e.POST("/comments", ch.Add(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.DELETE("/comments/:commentId", ch.Delete(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.PUT("/comments/:commentId", ch.Update(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 }

@@ -2,6 +2,9 @@ package main
 
 import (
 	"BE-Sosmed/config"
+	ch "BE-Sosmed/features/comments/handler"
+	cr "BE-Sosmed/features/comments/repository"
+	cs "BE-Sosmed/features/comments/services"
 	ph "BE-Sosmed/features/postings/handler"
 	pr "BE-Sosmed/features/postings/repository"
 	ps "BE-Sosmed/features/postings/service"
@@ -16,7 +19,7 @@ import (
 )
 
 func main() {
-e := echo.New()
+	e := echo.New()
 
 	cfg := config.InitConfig()
 
@@ -32,7 +35,7 @@ e := echo.New()
 		return
 	}
 
-	db.AutoMigrate(&ur.UserModel{}, &pr.PostingModel{})
+	db.AutoMigrate(&ur.UserModel{}, &pr.PostingModel{}, &cr.CommentModel{})
 
 	userRepo := ur.New(db)
 	hash := enkrip.New()
@@ -43,7 +46,11 @@ e := echo.New()
 	postingService := ps.New(postingRepo)
 	postingHandler := ph.New(postingService)
 
-	routes.InitRoute(e, userHandler, postingHandler)
+	commentRepo := cr.New(db)
+	commentService := cs.New(commentRepo)
+	commentHandler := ch.New(commentService)
+
+	routes.InitRoute(e, userHandler, postingHandler, commentHandler)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }
