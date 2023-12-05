@@ -3,8 +3,11 @@ package service
 import (
 	"BE-Sosmed/features/users"
 	"BE-Sosmed/helper/enkrip"
+	"BE-Sosmed/helper/jwt"
 	"errors"
 	"strings"
+
+	golangjwt "github.com/golang-jwt/jwt/v5"
 )
 
 type userService struct {
@@ -58,4 +61,50 @@ func (us *userService) Login(email string, password string) (users.User, error) 
 	}
 
 	return result, nil
+}
+
+func (us *userService) GetUserById(UserID uint) (users.User, error) {
+	result, err := us.repo.ReadUserById(UserID)
+
+	if err != nil {
+		return users.User{}, errors.New("terjadi kesalahan server")
+	}
+
+	return result, nil
+}
+
+func (us *userService) PutUser(token *golangjwt.Token, updatedUser users.User) (users.User, error) {
+	UserID, err := jwt.ExtractToken(token)
+	if err != nil {
+		return users.User{}, err
+	}
+
+	enkPassword, err := us.h.HashPassword(updatedUser.Password)
+
+	if err != nil {
+		return users.User{}, errors.New("terjadi masalah saat memproses data")
+	}
+
+	updatedUser.Password = enkPassword
+	result, err := us.repo.UpdateUser(UserID, updatedUser)
+
+	if err != nil {
+		return users.User{}, errors.New("terjadi kesalahan pada sistem")
+	}
+
+	return result, nil
+}
+
+func (us *userService) DeleteUser(token *golangjwt.Token) error {
+	UserID, err := jwt.ExtractToken(token)
+	if err != nil {
+		return err
+	}
+	err = us.repo.DeleteUser(UserID)
+
+	if err != nil {
+		return errors.New("terjadi kesalahan pada sistem")
+	}
+
+	return nil
 }
