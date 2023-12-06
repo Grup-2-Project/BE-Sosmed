@@ -127,3 +127,20 @@ func (pq *postingQuery) DeletePost(userID uint, postID uint) error {
 
 	return nil
 }
+
+func (pq *postingQuery) GetPostByPostID(PostID uint) (postings.Posting, error) {
+	var post PostingModel
+
+	if err := pq.db.Where("id = ?", PostID).Order("created_at desc").First(&post).Error; err != nil {
+		return postings.Posting{}, err
+	}
+
+	result := postings.Posting{
+		ID:      post.ID,
+		Artikel: post.Artikel,
+		Gambar:  post.Gambar,
+		UserID:  post.UserID,
+	}
+
+	return result, nil
+}

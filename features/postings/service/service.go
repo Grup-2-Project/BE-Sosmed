@@ -110,3 +110,21 @@ func (ps *PostingService) DeletePosting(token *golangjwt.Token, postID uint) err
 
 	return nil
 }
+
+func (ps *PostingService) AmbilPostingByPostID(PostID uint) (postings.Posting, error) {
+	post, err := ps.m.GetPostByPostID(PostID)
+
+	if err != nil {
+		return postings.Posting{}, err
+	}
+
+	user, err := ps.user.GetUserById(post.UserID)
+	if err != nil {
+		return postings.Posting{}, err
+	}
+
+	post.Username = user.Username
+	post.Image = user.Image
+
+	return post, nil
+}

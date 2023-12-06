@@ -208,3 +208,57 @@ func (pc *PostingHandler) Delete() echo.HandlerFunc {
 		})
 	}
 }
+
+func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid post ID",
+			})
+		}
+
+		post, err := pc.s.AmbilPostingByPostID(uint(postID))
+		if err != nil {
+			c.Logger().Error("Error getting all posts:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Error getting all posts",
+			})
+		}
+
+		comments, err := pc.s.AmbilComment(post.ID)
+		if err != nil {
+			c.Logger().Error("Error getting comments for post:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Error getting comments for post",
+			})
+		}
+
+		var commentInfo = make([]CommentInfo, len(comments))
+		for j, comment := range comments {
+			commentInfo[j] = CommentInfo{
+				ID:       comment.ID,
+				Komentar: comment.Komentar,
+				UserID:   comment.UserID,
+				PostID:   comment.PostID,
+				Username: comment.Username,
+				Image:    comment.Image,
+			}
+		}
+
+		response := GetResponse{
+			ID:       post.ID,
+			Artikel:  post.Artikel,
+			Gambar:   post.Gambar,
+			UserID:   post.UserID,
+			Username: post.Username,
+			Image:    post.Image,
+			Comments: commentInfo,
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success get post",
+			"data":    response,
+		})
+	}
+}
