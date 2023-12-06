@@ -27,6 +27,7 @@ func routeUser(e *echo.Echo, uh users.Handler) {
 	e.GET("/users/:id", uh.ReadById(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 	e.PUT("/users", uh.Update(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 	e.DELETE("/users", uh.Delete(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.GET("/users/:username", uh.ReadByUsername())
 }
 
 func routePosting(e *echo.Echo, ph postings.Handler) {

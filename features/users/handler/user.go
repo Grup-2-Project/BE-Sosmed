@@ -234,3 +234,16 @@ func (uh *userHandler) Delete() echo.HandlerFunc {
 		})
 	}
 }
+
+func (uh *userHandler) ReadByUsername() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		username := c.Param("username")
+		user, err := uh.s.GetUserByUsername(username)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"message": "Failed to get user",
+			})
+		}
+		return c.JSON(http.StatusOK, user)
+	}
+}

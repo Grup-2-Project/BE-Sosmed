@@ -23,6 +23,7 @@ type Handler interface {
 	ReadById() echo.HandlerFunc
 	Update() echo.HandlerFunc
 	Delete() echo.HandlerFunc
+	ReadByUsername() echo.HandlerFunc
 }
 
 type Service interface {
@@ -31,6 +32,7 @@ type Service interface {
 	GetUserById(UserID uint) (User, error)
 	PutUser(token *jwt.Token, updatedUser User) (User, error)
 	DeleteUser(token *jwt.Token) error
+	GetUserByUsername(username string) (User, error)
 }
 
 type Repository interface {
@@ -39,4 +41,5 @@ type Repository interface {
 	ReadUserById(UserID uint) (User, error)
 	UpdateUser(UserID uint, updatedUser User) (User, error)
 	DeleteUser(UserID uint) error
+	ReadUserByUsername(username string) (User, error)
 }

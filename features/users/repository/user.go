@@ -116,3 +116,23 @@ func (uq *userQuery) DeleteUser(UserID uint) error {
 
 	return nil
 }
+
+func (uq *userQuery) ReadUserByUsername(username string) (users.User, error) {
+	user := &UserModel{}
+
+	if err := uq.db.Where("username = ?", username).First(user).Error; err != nil {
+		return users.User{}, err
+	}
+
+	return users.User{
+		ID:        user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Gender:    user.Gender,
+		Hp:        user.Hp,
+		Email:     user.Email,
+		Password:  user.Password,
+		Image:     user.Image,
+		Username:  user.Username,
+	}, nil
+}

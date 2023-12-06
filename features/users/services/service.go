@@ -108,3 +108,7 @@ func (us *userService) DeleteUser(token *golangjwt.Token) error {
 
 	return nil
 }
+
+func (us *userService) GetUserByUsername(username string) (users.User, error) {
+	return us.repo.ReadUserByUsername(username)
+}
