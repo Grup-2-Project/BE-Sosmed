@@ -118,7 +118,6 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 				commentInfo[j] = CommentInfo{
 					ID:       comment.ID,
 					Komentar: comment.Komentar,
-					UserID:   comment.UserID,
 					PostID:   comment.PostID,
 					Username: comment.Username,
 					Image:    comment.Image,
@@ -129,7 +128,6 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 				ID:       post.ID,
 				Artikel:  post.Artikel,
 				Gambar:   post.Gambar,
-				UserID:   post.UserID,
 				Username: post.Username,
 				Image:    post.Image,
 				Comments: commentInfo,
@@ -239,7 +237,6 @@ func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
 			commentInfo[j] = CommentInfo{
 				ID:       comment.ID,
 				Komentar: comment.Komentar,
-				UserID:   comment.UserID,
 				PostID:   comment.PostID,
 				Username: comment.Username,
 				Image:    comment.Image,
@@ -250,7 +247,6 @@ func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
 			ID:       post.ID,
 			Artikel:  post.Artikel,
 			Gambar:   post.Gambar,
-			UserID:   post.UserID,
 			Username: post.Username,
 			Image:    post.Image,
 			Comments: commentInfo,
@@ -290,7 +286,6 @@ func (pc *PostingHandler) GetByUsername() echo.HandlerFunc {
 				commentInfo[j] = CommentInfo{
 					ID:       comment.ID,
 					Komentar: comment.Komentar,
-					UserID:   comment.UserID,
 					PostID:   comment.PostID,
 					Username: comment.Username,
 					Image:    comment.Image,
@@ -301,7 +296,6 @@ func (pc *PostingHandler) GetByUsername() echo.HandlerFunc {
 				ID:       post.ID,
 				Artikel:  post.Artikel,
 				Gambar:   post.Gambar,
-				UserID:   post.UserID,
 				Username: post.Username,
 				Image:    post.Image,
 				Comments: commentInfo,

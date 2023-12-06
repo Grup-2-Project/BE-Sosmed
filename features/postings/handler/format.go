@@ -14,7 +14,6 @@ type GetResponse struct {
 	ID       uint          `json:"id"`
 	Artikel  string        `json:"artikel"`
 	Gambar   string        `json:"gambar"`
-	UserID   uint          `json:"user_id"`
 	Username string        `json:"username"`
 	Image    string        `json:"foto_profil"`
 	Comments []CommentInfo `json:"comments"`
@@ -23,7 +22,6 @@ type GetResponse struct {
 type CommentInfo struct {
 	ID       uint   `json:"comment_id"`
 	Komentar string `json:"komentar"`
-	UserID   uint   `json:"user_id"`
 	PostID   uint   `json:"post_id"`
 	Username string `json:"username"`
 	Image    string `json:"foto_profil"`
