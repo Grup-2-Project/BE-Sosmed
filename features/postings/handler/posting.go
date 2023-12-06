@@ -128,6 +128,7 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 				ID:       post.ID,
 				Artikel:  post.Artikel,
 				Gambar:   post.Gambar,
+				Likes: 	  post.Likes,
 				Username: post.Username,
 				Image:    post.Image,
 				Comments: commentInfo,
@@ -305,6 +306,20 @@ func (pc *PostingHandler) GetByUsername() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "success get posts",
 			"data":    response,
+		})
+	}
+}
+
+func (ph *PostingHandler) LikePost() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		postID, _ := strconv.Atoi(c.Param("id"))
+		if err := ph.s.LikePosting(uint(postID)); err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"message": "Failed to like post",
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]string{
+			"message": "Post liked successfully",
 		})
 	}
 }

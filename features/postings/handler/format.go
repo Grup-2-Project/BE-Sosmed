@@ -15,6 +15,7 @@ type GetResponse struct {
 	Artikel  string        `json:"artikel"`
 	Gambar   string        `json:"gambar"`
 	Username string        `json:"username"`
+	Likes    int           `json:"likes"`
 	Image    string        `json:"foto_profil"`
 	Comments []CommentInfo `json:"comments"`
 }

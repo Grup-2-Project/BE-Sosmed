@@ -13,6 +13,7 @@ type PostingModel struct {
 	gorm.Model
 	Artikel  string
 	Gambar   string
+	Likes int
 	UserID   uint
 	Comments []cr.CommentModel `gorm:"foreignKey:PostID"`
 }
@@ -75,6 +76,7 @@ func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {
 			ID:      post.ID,
 			Artikel: post.Artikel,
 			Gambar:  post.Gambar,
+			Likes: post.Likes,
 			UserID:  post.UserID,
 		})
 	}
@@ -169,4 +171,13 @@ func (pq *postingQuery) GetPostByUsername(Username string) ([]postings.Posting, 
 	}
 
 	return result, nil
+}
+
+func (pq *postingQuery) LikePost(postID uint) error {
+	post := &PostingModel{}
+	if err := pq.db.First(post, postID).Error; err != nil {
+		return err
+	}
+	post.Likes++
+	return pq.db.Save(post).Error
 }

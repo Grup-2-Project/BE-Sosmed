@@ -12,6 +12,7 @@ type Posting struct {
 	ID       uint
 	Artikel  string
 	Gambar   string
+	Likes int
 	UserID   uint
 	Username string
 	Image    string
@@ -24,6 +25,7 @@ type Handler interface {
 	Delete() echo.HandlerFunc
 	GetByPostID() echo.HandlerFunc
 	GetByUsername() echo.HandlerFunc
+	LikePost() echo.HandlerFunc
 }
 
 type Service interface {
@@ -34,6 +36,7 @@ type Service interface {
 	DeletePosting(token *jwt.Token, postID uint) error
 	AmbilPostingByPostID(PostID uint) (Posting, error)
 	AmbilPostingByUsername(Username string) ([]Posting, error)
+	LikePosting(postID uint) error
 }
 
 type Repository interface {
@@ -44,4 +47,5 @@ type Repository interface {
 	DeletePost(userID uint, postID uint) error
 	GetPostByPostID(PostID uint) (Posting, error)
 	GetPostByUsername(Username string) ([]Posting, error)
+	LikePost(postID uint) error
 }

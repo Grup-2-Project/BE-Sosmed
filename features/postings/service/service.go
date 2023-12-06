@@ -149,3 +149,7 @@ func (ps *PostingService) AmbilPostingByUsername(Username string) ([]postings.Po
 
 	return posts, nil
 }
+
+func (ps *PostingService) LikePosting(postID uint) error {
+	return ps.m.LikePost(postID)
+}
