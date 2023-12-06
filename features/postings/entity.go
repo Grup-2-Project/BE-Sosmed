@@ -9,10 +9,12 @@ import (
 )
 
 type Posting struct {
-	ID      uint
-	Artikel string
-	Gambar  string
-	UserID  uint
+	ID       uint
+	Artikel  string
+	Gambar   string
+	UserID   uint
+	Username string
+	Image    string
 }
 
 type Handler interface {

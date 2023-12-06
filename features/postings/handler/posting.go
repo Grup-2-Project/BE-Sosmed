@@ -81,7 +81,6 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 		}
 
 		var response = new(AddResponse)
-		response.ID = result.ID
 		response.Artikel = result.Artikel
 		response.Gambar = result.Gambar
 
@@ -121,6 +120,8 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 					Komentar: comment.Komentar,
 					UserID:   comment.UserID,
 					PostID:   comment.PostID,
+					Username: comment.Username,
+					Image:    comment.Image,
 				}
 			}
 
@@ -129,6 +130,8 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 				Artikel:  post.Artikel,
 				Gambar:   post.Gambar,
 				UserID:   post.UserID,
+				Username: post.Username,
+				Image:    post.Image,
 				Comments: commentInfo,
 			}
 		}
@@ -171,14 +174,12 @@ func (pc *PostingHandler) Update() echo.HandlerFunc {
 		}
 
 		var response = UpdateResponse{
-			ID:      updatedPost.ID,
 			Artikel: updatedPost.Artikel,
 			Gambar:  updatedPost.Gambar,
-			UserID:  updatedPost.UserID,
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success updating post",
+			"message": "success update post",
 			"data":    response,
 		})
 	}

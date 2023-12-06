@@ -3,6 +3,7 @@ package service
 import (
 	"BE-Sosmed/features/comments"
 	"BE-Sosmed/features/postings"
+	"BE-Sosmed/features/users"
 	"BE-Sosmed/helper/jwt"
 	"errors"
 	"strings"
@@ -11,12 +12,14 @@ import (
 )
 
 type PostingService struct {
-	m postings.Repository
+	m    postings.Repository
+	user users.Service
 }
 
-func New(model postings.Repository) postings.Service {
+func New(model postings.Repository, user users.Service) postings.Service {
 	return &PostingService{
-		m: model,
+		m:    model,
+		user: user,
 	}
 }
 
@@ -45,6 +48,17 @@ func (ps *PostingService) AmbilComment(PostID uint) ([]comments.Comment, error) 
 		return nil, errors.New("terjadi kesalahan server")
 	}
 
+	for i, post := range result {
+		user, err := ps.user.GetUserById(post.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		result[i].Username = user.Username
+		result[i].Image = user.Image
+
+	}
+
 	return result, nil
 }
 
@@ -53,6 +67,17 @@ func (ps *PostingService) SemuaPosting() ([]postings.Posting, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	for i, post := range posts {
+		user, err := ps.user.GetUserById(post.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		posts[i].Username = user.Username
+		posts[i].Image = user.Image
+
 	}
 
 	return posts, nil

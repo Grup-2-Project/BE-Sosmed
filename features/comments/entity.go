@@ -10,6 +10,8 @@ type Comment struct {
 	Komentar string
 	UserID   uint
 	PostID   uint
+	Username string
+	Image    string
 }
 
 type Handler interface {

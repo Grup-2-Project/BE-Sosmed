@@ -79,6 +79,7 @@ func (uq *userQuery) ReadUserById(UserID uint) (users.User, error) {
 	result.ID = userData.ID
 	result.FirstName = userData.FirstName
 	result.Username = userData.Username
+	result.Image = userData.Image
 
 	return *result, nil
 }
