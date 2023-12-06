@@ -81,7 +81,6 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 		}
 
 		var response = new(AddResponse)
-		response.ID = result.ID
 		response.Artikel = result.Artikel
 		response.Gambar = result.Gambar
 
@@ -121,6 +120,8 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 					Komentar: comment.Komentar,
 					UserID:   comment.UserID,
 					PostID:   comment.PostID,
+					Username: comment.Username,
+					Image:    comment.Image,
 				}
 			}
 
@@ -129,6 +130,8 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 				Artikel:  post.Artikel,
 				Gambar:   post.Gambar,
 				UserID:   post.UserID,
+				Username: post.Username,
+				Image:    post.Image,
 				Comments: commentInfo,
 			}
 		}
@@ -171,14 +174,12 @@ func (pc *PostingHandler) Update() echo.HandlerFunc {
 		}
 
 		var response = UpdateResponse{
-			ID:      updatedPost.ID,
 			Artikel: updatedPost.Artikel,
 			Gambar:  updatedPost.Gambar,
-			UserID:  updatedPost.UserID,
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success updating post",
+			"message": "success update post",
 			"data":    response,
 		})
 	}
@@ -204,6 +205,112 @@ func (pc *PostingHandler) Delete() echo.HandlerFunc {
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "success deleting post",
+		})
+	}
+}
+
+func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		postID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "invalid post ID",
+			})
+		}
+
+		post, err := pc.s.AmbilPostingByPostID(uint(postID))
+		if err != nil {
+			c.Logger().Error("Error getting post:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Error getting post",
+			})
+		}
+
+		comments, err := pc.s.AmbilComment(post.ID)
+		if err != nil {
+			c.Logger().Error("Error getting comments for post:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Error getting comments for post",
+			})
+		}
+
+		var commentInfo = make([]CommentInfo, len(comments))
+		for j, comment := range comments {
+			commentInfo[j] = CommentInfo{
+				ID:       comment.ID,
+				Komentar: comment.Komentar,
+				UserID:   comment.UserID,
+				PostID:   comment.PostID,
+				Username: comment.Username,
+				Image:    comment.Image,
+			}
+		}
+
+		response := GetResponse{
+			ID:       post.ID,
+			Artikel:  post.Artikel,
+			Gambar:   post.Gambar,
+			UserID:   post.UserID,
+			Username: post.Username,
+			Image:    post.Image,
+			Comments: commentInfo,
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success get post",
+			"data":    response,
+		})
+	}
+}
+
+func (pc *PostingHandler) GetByUsername() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		posts, err := pc.s.AmbilPostingByUsername(c.Param("username"))
+
+		if err != nil {
+			c.Logger().Error("Error getting all posts:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Error getting all posts",
+			})
+		}
+
+		var response = make([]GetResponse, len(posts))
+
+		for i, post := range posts {
+			comments, err := pc.s.AmbilComment(post.ID)
+			if err != nil {
+				c.Logger().Error("Error getting comments for post:", err.Error())
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+					"message": "Error getting comments for post",
+				})
+			}
+
+			var commentInfo = make([]CommentInfo, len(comments))
+			for j, comment := range comments {
+				commentInfo[j] = CommentInfo{
+					ID:       comment.ID,
+					Komentar: comment.Komentar,
+					UserID:   comment.UserID,
+					PostID:   comment.PostID,
+					Username: comment.Username,
+					Image:    comment.Image,
+				}
+			}
+
+			response[i] = GetResponse{
+				ID:       post.ID,
+				Artikel:  post.Artikel,
+				Gambar:   post.Gambar,
+				UserID:   post.UserID,
+				Username: post.Username,
+				Image:    post.Image,
+				Comments: commentInfo,
+			}
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success get posts",
+			"data":    response,
 		})
 	}
 }

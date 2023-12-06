@@ -28,7 +28,6 @@ type LoginResponse struct {
 }
 
 type GetResponse struct {
-	ID        uint   `json:"id"`
 	FirstName string `json:"nama_depan"`
 	LastName  string `json:"nama_belakang"`
 	Gender    string `json:"gender"`

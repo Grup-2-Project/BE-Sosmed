@@ -6,7 +6,6 @@ type AddRequest struct {
 }
 
 type AddResponse struct {
-	ID      uint   `json:"id"`
 	Artikel string `json:"artikel"`
 	Gambar  string `json:"gambar"`
 }
@@ -16,6 +15,8 @@ type GetResponse struct {
 	Artikel  string        `json:"artikel"`
 	Gambar   string        `json:"gambar"`
 	UserID   uint          `json:"user_id"`
+	Username string        `json:"username"`
+	Image    string        `json:"foto_profil"`
 	Comments []CommentInfo `json:"comments"`
 }
 
@@ -24,6 +25,8 @@ type CommentInfo struct {
 	Komentar string `json:"komentar"`
 	UserID   uint   `json:"user_id"`
 	PostID   uint   `json:"post_id"`
+	Username string `json:"username"`
+	Image    string `json:"foto_profil"`
 }
 
 type UpdateRequest struct {
@@ -33,8 +36,6 @@ type UpdateRequest struct {
 }
 
 type UpdateResponse struct {
-	ID      uint   `json:"id"`
 	Artikel string `json:"artikel"`
 	Gambar  string `json:"gambar"`
-	UserID  uint   `json:"user_id"`
 }

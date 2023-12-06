@@ -87,7 +87,7 @@ func (cc *commentHandler) Delete() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success deleting comment",
+			"message": "success delete comment",
 		})
 	}
 }
@@ -123,7 +123,7 @@ func (cc *commentHandler) Update() echo.HandlerFunc {
 		response.Komentar = updatedComment.Komentar
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "update data success",
+			"message": "success update comment",
 			"data":    response,
 		})
 	}

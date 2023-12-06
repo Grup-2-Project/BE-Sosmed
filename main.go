@@ -43,7 +43,7 @@ func main() {
 	userHandler := uh.New(userService)
 
 	postingRepo := pr.New(db)
-	postingService := ps.New(postingRepo)
+	postingService := ps.New(postingRepo, userService)
 	postingHandler := ph.New(postingService)
 
 	commentRepo := cr.New(db)
