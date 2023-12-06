@@ -144,3 +144,29 @@ func (pq *postingQuery) GetPostByPostID(PostID uint) (postings.Posting, error) {
 
 	return result, nil
 }
+
+func (pq *postingQuery) GetPostByUsername(Username string) ([]postings.Posting, error) {
+	var posts []PostingModel
+	err := pq.db.Model(&PostingModel{}).
+		Select("posting_models.*, user_models.username, user_models.image").
+		Joins("JOIN user_models on posting_models.user_id = user_models.id").
+		Where("username = ?", Username).
+		Scan(&posts).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result []postings.Posting
+	for _, post := range posts {
+		result = append(result, postings.Posting{
+			ID:      post.ID,
+			Artikel: post.Artikel,
+			Gambar:  post.Gambar,
+			UserID:  post.UserID,
+		})
+	}
+
+	return result, nil
+}

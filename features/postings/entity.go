@@ -23,6 +23,7 @@ type Handler interface {
 	Update() echo.HandlerFunc
 	Delete() echo.HandlerFunc
 	GetByPostID() echo.HandlerFunc
+	GetByUsername() echo.HandlerFunc
 }
 
 type Service interface {
@@ -32,6 +33,7 @@ type Service interface {
 	UpdatePosting(token *jwt.Token, updatePosting Posting) (Posting, error)
 	DeletePosting(token *jwt.Token, postID uint) error
 	AmbilPostingByPostID(PostID uint) (Posting, error)
+	AmbilPostingByUsername(Username string) ([]Posting, error)
 }
 
 type Repository interface {
@@ -41,4 +43,5 @@ type Repository interface {
 	UpdatePost(userID uint, updatePosting Posting) (Posting, error)
 	DeletePost(userID uint, postID uint) error
 	GetPostByPostID(PostID uint) (Posting, error)
+	GetPostByUsername(Username string) ([]Posting, error)
 }

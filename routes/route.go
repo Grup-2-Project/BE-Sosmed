@@ -30,11 +30,12 @@ func routeUser(e *echo.Echo, uh users.Handler) {
 }
 
 func routePosting(e *echo.Echo, ph postings.Handler) {
-	e.POST("/post", ph.Add(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
-	e.GET("/post", ph.GetAll())
+	e.POST("/posts", ph.Add(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.GET("/posts", ph.GetAll())
 	e.GET("/post/:id", ph.GetByPostID())
-	e.PUT("/post/:id", ph.Update(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
-	e.DELETE("/post/:id", ph.Delete(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.GET("/posts/:username", ph.GetByUsername())
+	e.PUT("/posts/:id", ph.Update(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.DELETE("/posts/:id", ph.Delete(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 }
 
 func routeComment(e *echo.Echo, ch comments.Handler) {

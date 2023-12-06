@@ -128,3 +128,24 @@ func (ps *PostingService) AmbilPostingByPostID(PostID uint) (postings.Posting, e
 
 	return post, nil
 }
+
+func (ps *PostingService) AmbilPostingByUsername(Username string) ([]postings.Posting, error) {
+	posts, err := ps.m.GetPostByUsername(Username)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for i, post := range posts {
+		user, err := ps.user.GetUserById(post.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		posts[i].Username = user.Username
+		posts[i].Image = user.Image
+
+	}
+
+	return posts, nil
+}

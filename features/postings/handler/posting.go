@@ -220,9 +220,9 @@ func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
 
 		post, err := pc.s.AmbilPostingByPostID(uint(postID))
 		if err != nil {
-			c.Logger().Error("Error getting all posts:", err.Error())
+			c.Logger().Error("Error getting post:", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"message": "Error getting all posts",
+				"message": "Error getting post",
 			})
 		}
 
@@ -258,6 +258,58 @@ func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "success get post",
+			"data":    response,
+		})
+	}
+}
+
+func (pc *PostingHandler) GetByUsername() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		posts, err := pc.s.AmbilPostingByUsername(c.Param("username"))
+
+		if err != nil {
+			c.Logger().Error("Error getting all posts:", err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Error getting all posts",
+			})
+		}
+
+		var response = make([]GetResponse, len(posts))
+
+		for i, post := range posts {
+			comments, err := pc.s.AmbilComment(post.ID)
+			if err != nil {
+				c.Logger().Error("Error getting comments for post:", err.Error())
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+					"message": "Error getting comments for post",
+				})
+			}
+
+			var commentInfo = make([]CommentInfo, len(comments))
+			for j, comment := range comments {
+				commentInfo[j] = CommentInfo{
+					ID:       comment.ID,
+					Komentar: comment.Komentar,
+					UserID:   comment.UserID,
+					PostID:   comment.PostID,
+					Username: comment.Username,
+					Image:    comment.Image,
+				}
+			}
+
+			response[i] = GetResponse{
+				ID:       post.ID,
+				Artikel:  post.Artikel,
+				Gambar:   post.Gambar,
+				UserID:   post.UserID,
+				Username: post.Username,
+				Image:    post.Image,
+				Comments: commentInfo,
+			}
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success get posts",
 			"data":    response,
 		})
 	}
