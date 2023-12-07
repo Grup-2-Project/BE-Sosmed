@@ -52,6 +52,30 @@ func (_m *Service) GetUserById(UserID uint) (users.User, error) {
 	return r0, r1
 }
 
+// GetUserByUsername provides a mock function with given fields: username
+func (_m *Service) GetUserByUsername(username string) (users.User, error) {
+	ret := _m.Called(username)
+
+	var r0 users.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (users.User, error)); ok {
+		return rf(username)
+	}
+	if rf, ok := ret.Get(0).(func(string) users.User); ok {
+		r0 = rf(username)
+	} else {
+		r0 = ret.Get(0).(users.User)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(username)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Login provides a mock function with given fields: email, password
 func (_m *Service) Login(email string, password string) (users.User, error) {
 	ret := _m.Called(email, password)
