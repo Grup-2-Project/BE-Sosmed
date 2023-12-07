@@ -99,6 +99,30 @@ func (_m *Repository) ReadUserById(UserID uint) (users.User, error) {
 	return r0, r1
 }
 
+// ReadUserByUsername provides a mock function with given fields: username
+func (_m *Repository) ReadUserByUsername(username string) (users.User, error) {
+	ret := _m.Called(username)
+
+	var r0 users.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (users.User, error)); ok {
+		return rf(username)
+	}
+	if rf, ok := ret.Get(0).(func(string) users.User); ok {
+		r0 = rf(username)
+	} else {
+		r0 = ret.Get(0).(users.User)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(username)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UpdateUser provides a mock function with given fields: UserID, updatedUser
 func (_m *Repository) UpdateUser(UserID uint, updatedUser users.User) (users.User, error) {
 	ret := _m.Called(UserID, updatedUser)
