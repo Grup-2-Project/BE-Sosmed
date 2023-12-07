@@ -180,25 +180,40 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 
 		fileHeader, err := c.FormFile("foto_profil")
 
-		log.Println(fileHeader.Filename)
+		var inputProcess = new(users.User)
+		if err != nil {
+			inputProcess.FirstName = updateRequest.FirstName
+			inputProcess.LastName = updateRequest.LastName
+			inputProcess.Password = updateRequest.Password
+			inputProcess.Username = updateRequest.Username
+			inputProcess.Email = updateRequest.Email
+			inputProcess.Hp = updateRequest.Hp
+			inputProcess.Gender = updateRequest.Gender
+		} else {
+			log.Println(fileHeader.Filename)
 
-		file, _ := fileHeader.Open()
+			file, _ := fileHeader.Open()
 
-		var ctx = context.Background()
+			var ctx = context.Background()
 
-		cldService, _ := cloudinary.NewFromURL(urlCloudinary)
-		resp, _ := cldService.Upload.Upload(ctx, file, uploader.UploadParams{})
-		log.Println(resp.SecureURL)
+			cldService, _ := cloudinary.NewFromURL(urlCloudinary)
+
+			resp, _ := cldService.Upload.Upload(ctx, file, uploader.UploadParams{})
+
+			log.Println(resp.SecureURL)
+
+			inputProcess.FirstName = updateRequest.FirstName
+			inputProcess.LastName = updateRequest.LastName
+			inputProcess.Password = updateRequest.Password
+			inputProcess.Username = updateRequest.Username
+			inputProcess.Email = updateRequest.Email
+			inputProcess.Hp = updateRequest.Hp
+			inputProcess.Gender = updateRequest.Gender
+
+		}
 
 		// Panggil service untuk melakukan update user
-		updatedUser, err := uh.s.PutUser(c.Get("user").(*gojwt.Token), users.User{
-			FirstName: updateRequest.FirstName,
-			LastName:  updateRequest.LastName,
-			Image:     resp.SecureURL,
-			Hp:        updateRequest.Hp,
-			Username:  updateRequest.Username,
-			Password:  updateRequest.Password,
-		})
+		updatedUser, err := uh.s.PutUser(c.Get("user").(*gojwt.Token), *inputProcess)
 
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
