@@ -88,6 +88,9 @@ func (pq *postingQuery) GetCommentForDetailPost(PostID uint) ([]comments.Comment
 func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {
 	var posts []PostingModel
 
+	if err := pq.db.Order("created_at desc").Find(&posts).Error; err != nil {
+		return nil, err
+	}
 	var result []postings.Posting
 	for _, post := range posts {
 		result = append(result, postings.Posting{
