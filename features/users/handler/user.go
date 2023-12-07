@@ -209,6 +209,7 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 			inputProcess.Email = updateRequest.Email
 			inputProcess.Hp = updateRequest.Hp
 			inputProcess.Gender = updateRequest.Gender
+			inputProcess.Image = resp.SecureURL
 
 		}
 
