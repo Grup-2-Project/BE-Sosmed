@@ -93,7 +93,17 @@ func (pc *PostingHandler) Add() echo.HandlerFunc {
 
 func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		posts, err := pc.s.SemuaPosting()
+		page, err := strconv.Atoi(c.QueryParam("page"))
+		if err != nil || page < 1 {
+			page = 1
+		}
+
+		pageSize, err := strconv.Atoi(c.QueryParam("page_size"))
+		if err != nil || pageSize < 1 {
+			pageSize = 10
+		}
+
+		posts, pagination, err := pc.s.SemuaPosting(int64(page), int64(pageSize))
 
 		if err != nil {
 			c.Logger().Error("Error getting all posts:", err.Error())
@@ -128,7 +138,7 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 				ID:       post.ID,
 				Artikel:  post.Artikel,
 				Gambar:   post.Gambar,
-				Likes: 	  post.Likes,
+				Likes:    post.Likes,
 				Username: post.Username,
 				Image:    post.Image,
 				Comments: commentInfo,
@@ -136,8 +146,9 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success get all posts",
-			"data":    response,
+			"message":    "success get all posts",
+			"data":       response,
+			"pagination": pagination,
 		})
 	}
 }
