@@ -1,17 +1,20 @@
 package comments
 
 import (
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
 type Comment struct {
-	ID       uint
-	Komentar string
-	UserID   uint
-	PostID   uint
-	Username string
-	Image    string
+	ID        uint
+	Komentar  string
+	UserID    uint
+	PostID    uint
+	Username  string
+	Image     string
+	CreatedAt time.Time
 }
 
 type Handler interface {
