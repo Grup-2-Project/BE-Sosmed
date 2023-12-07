@@ -47,7 +47,27 @@ func (pq *postingQuery) InsertPosting(userID uint, newPosting postings.Posting) 
 func (pq *postingQuery) GetComment(PostID uint) ([]comments.Comment, error) {
 	var commentModels []cr.CommentModel
 
-	if err := pq.db.Where("post_id = ?", PostID).Find(&commentModels).Error; err != nil {
+	if err := pq.db.Where("post_id = ?", PostID).Order("created_at desc").Limit(2).Find(&commentModels).Error; err != nil {
+		return nil, err
+	}
+
+	var result []comments.Comment
+	for _, model := range commentModels {
+		result = append(result, comments.Comment{
+			ID:       model.ID,
+			Komentar: model.Komentar,
+			PostID:   model.PostID,
+			UserID:   model.UserID,
+		})
+	}
+
+	return result, nil
+}
+
+func (pq *postingQuery) GetCommentForDetailPost(PostID uint) ([]comments.Comment, error) {
+	var commentModels []cr.CommentModel
+
+	if err := pq.db.Where("post_id = ?", PostID).Order("created_at desc").Find(&commentModels).Error; err != nil {
 		return nil, err
 	}
 

@@ -40,6 +40,7 @@ type Service interface {
 	TambahPosting(token *jwt.Token, newPosting Posting) (Posting, error)
 	SemuaPosting(page int64, pageSize int64) ([]Posting, Pagination, error)
 	AmbilComment(PostID uint) ([]comments.Comment, error)
+	AmbilCommentForDetailPost(PostID uint) ([]comments.Comment, error)
 	UpdatePosting(token *jwt.Token, updatePosting Posting) (Posting, error)
 	DeletePosting(token *jwt.Token, postID uint) error
 	AmbilPostingByPostID(PostID uint) (Posting, error)
@@ -51,6 +52,7 @@ type Repository interface {
 	InsertPosting(userID uint, newPosting Posting) (Posting, error)
 	GetAllPost(page int64, pageSize int64) ([]Posting, Pagination, error)
 	GetComment(PostID uint) ([]comments.Comment, error)
+	GetCommentForDetailPost(PostID uint) ([]comments.Comment, error)
 	UpdatePost(userID uint, updatePosting Posting) (Posting, error)
 	DeletePost(userID uint, postID uint) error
 	GetPostByPostID(PostID uint) (Posting, error)

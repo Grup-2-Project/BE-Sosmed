@@ -62,6 +62,27 @@ func (ps *PostingService) AmbilComment(PostID uint) ([]comments.Comment, error) 
 	return result, nil
 }
 
+func (ps *PostingService) AmbilCommentForDetailPost(PostID uint) ([]comments.Comment, error) {
+	result, err := ps.m.GetCommentForDetailPost(PostID)
+
+	if err != nil {
+		return nil, errors.New("terjadi kesalahan server")
+	}
+
+	for i, post := range result {
+		user, err := ps.user.GetUserById(post.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		result[i].Username = user.Username
+		result[i].Image = user.Image
+
+	}
+
+	return result, nil
+}
+
 func (ps *PostingService) SemuaPosting(page int64, pageSize int64) ([]postings.Posting, postings.Pagination, error) {
 	posts, pagination, err := ps.m.GetAllPost(page, pageSize)
 

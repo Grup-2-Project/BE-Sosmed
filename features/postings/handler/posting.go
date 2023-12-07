@@ -236,7 +236,7 @@ func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
 			})
 		}
 
-		comments, err := pc.s.AmbilComment(post.ID)
+		comments, err := pc.s.AmbilCommentForDetailPost(post.ID)
 		if err != nil {
 			c.Logger().Error("Error getting comments for post:", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
