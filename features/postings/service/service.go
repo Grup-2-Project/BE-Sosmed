@@ -83,17 +83,17 @@ func (ps *PostingService) AmbilCommentForDetailPost(PostID uint) ([]comments.Com
 	return result, nil
 }
 
-func (ps *PostingService) SemuaPosting(page int64, pageSize int64) ([]postings.Posting, postings.Pagination, error) {
-	posts, pagination, err := ps.m.GetAllPost(page, pageSize)
+func (ps *PostingService) SemuaPosting() ([]postings.Posting, error) {
+	posts, err := ps.m.GetAllPost()
 
 	if err != nil {
-		return nil, postings.Pagination{}, err
+		return nil, err
 	}
 
 	for i, post := range posts {
 		user, err := ps.user.GetUserById(post.UserID)
 		if err != nil {
-			return nil, postings.Pagination{}, err
+			return nil, err
 		}
 
 		posts[i].Username = user.Username
@@ -101,7 +101,7 @@ func (ps *PostingService) SemuaPosting(page int64, pageSize int64) ([]postings.P
 
 	}
 
-	return posts, pagination, nil
+	return posts, nil
 }
 
 func (ps *PostingService) UpdatePosting(token *golangjwt.Token, updatePosting postings.Posting) (postings.Posting, error) {

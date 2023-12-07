@@ -20,14 +20,6 @@ type Posting struct {
 	CreatedAt time.Time
 }
 
-type Pagination struct {
-	TotalRecords int64  `json:"total_records"`
-	CurrentPage  int64  `json:"current_page"`
-	TotalPages   int64  `json:"total_pages"`
-	NextPage     int64  `json:"next_page"`
-	PrevPage     *int64 `json:"prev_page"`
-}
-
 type Handler interface {
 	Add() echo.HandlerFunc
 	GetAll() echo.HandlerFunc
@@ -40,7 +32,7 @@ type Handler interface {
 
 type Service interface {
 	TambahPosting(token *jwt.Token, newPosting Posting) (Posting, error)
-	SemuaPosting(page int64, pageSize int64) ([]Posting, Pagination, error)
+	SemuaPosting() ([]Posting, error)
 	AmbilComment(PostID uint) ([]comments.Comment, error)
 	AmbilCommentForDetailPost(PostID uint) ([]comments.Comment, error)
 	UpdatePosting(token *jwt.Token, updatePosting Posting) (Posting, error)
@@ -52,7 +44,7 @@ type Service interface {
 
 type Repository interface {
 	InsertPosting(userID uint, newPosting Posting) (Posting, error)
-	GetAllPost(page int64, pageSize int64) ([]Posting, Pagination, error)
+	GetAllPost() ([]Posting, error)
 	GetComment(PostID uint) ([]comments.Comment, error)
 	GetCommentForDetailPost(PostID uint) ([]comments.Comment, error)
 	UpdatePost(userID uint, updatePosting Posting) (Posting, error)
