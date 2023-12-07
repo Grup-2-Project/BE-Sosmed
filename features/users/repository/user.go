@@ -90,14 +90,16 @@ func (uq *userQuery) UpdateUser(UserID uint, updatedUser users.User) (users.User
 		return users.User{}, err
 	}
 
-	userData.FirstName = updatedUser.FirstName
-	userData.LastName = updatedUser.LastName
-	userData.Username = updatedUser.Username
-	userData.Hp = updatedUser.Hp
-	userData.Image = updatedUser.Image
-	userData.Password = updatedUser.Password
-
-	if err := uq.db.Save(&userData).Error; err != nil {
+	if err := uq.db.Model(&userData).Updates(UserModel{
+		FirstName: updatedUser.FirstName,
+		LastName:  updatedUser.LastName,
+		Username:  updatedUser.Username,
+		Email:     updatedUser.Email,
+		Image:     updatedUser.Image,
+		Hp:        updatedUser.Hp,
+		Gender:    updatedUser.Gender,
+		Password:  updatedUser.Password,
+	}).Error; err != nil {
 		return users.User{}, err
 	}
 
