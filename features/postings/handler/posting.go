@@ -327,16 +327,28 @@ func (pc *PostingHandler) GetByUsername() echo.HandlerFunc {
 	}
 }
 
+
 func (ph *PostingHandler) LikePost() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		postID, _ := strconv.Atoi(c.Param("id"))
-		if err := ph.s.LikePosting(uint(postID)); err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{
-				"message": "Failed to like post",
-			})
-		}
-		return c.JSON(http.StatusOK, map[string]string{
-			"message": "Post liked successfully",
-		})
-	}
+    return func(c echo.Context) error {
+        postIDParam := c.Param("id")
+        postIDInt, err := strconv.Atoi(postIDParam)
+        if err != nil {
+            return c.JSON(http.StatusBadRequest, map[string]interface{}{
+                "message": "Invalid postID",
+            })
+        }
+        postID := uint(postIDInt)
+
+        result, err := ph.s.LikePosting(c.Get("user").(*gojwt.Token), postID)
+        if err != nil {
+            return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+                "message": err.Error(),
+            })
+        }
+
+        return c.JSON(http.StatusOK, map[string]interface{}{
+            "message": "Post liked successfully",
+            "data":    result,
+        })
+    }
 }

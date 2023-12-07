@@ -227,11 +227,31 @@ func (pq *postingQuery) GetPostByUsername(Username string) ([]postings.Posting, 
 	return result, nil
 }
 
-func (pq *postingQuery) LikePost(postID uint) error {
-	post := &PostingModel{}
-	if err := pq.db.First(post, postID).Error; err != nil {
-		return err
-	}
-	post.Likes++
-	return pq.db.Save(post).Error
+
+func (pq *postingQuery) LikePosts(userID, postID uint, updatePosting postings.Posting) (postings.Posting, error) {
+    var existingPost PostingModel
+
+    if err := pq.db.First(&existingPost, postID).Error; err != nil {
+        return postings.Posting{}, errors.New("posting not found")
+    }
+
+    if existingPost.UserID != userID {
+        return postings.Posting{}, errors.New("you are not authorized to like this post")
+    }
+
+    if err := pq.db.Model(&existingPost).Updates(PostingModel{
+        Likes: existingPost.Likes + 1,
+    }).Error; err != nil {
+        return postings.Posting{}, err
+    }
+
+    updatedPost := postings.Posting{
+        ID:      existingPost.ID,
+        Artikel: existingPost.Artikel,
+        Gambar:  existingPost.Gambar,
+        Likes:   existingPost.Likes,
+        UserID:  existingPost.UserID,
+    }
+
+    return updatedPost, nil
 }

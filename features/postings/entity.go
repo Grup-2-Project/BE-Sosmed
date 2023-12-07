@@ -47,7 +47,7 @@ type Service interface {
 	DeletePosting(token *jwt.Token, postID uint) error
 	AmbilPostingByPostID(PostID uint) (Posting, error)
 	AmbilPostingByUsername(Username string) ([]Posting, error)
-	LikePosting(postID uint) error
+	LikePosting(token *jwt.Token, postID uint) (Posting, error)
 }
 
 type Repository interface {
@@ -59,5 +59,5 @@ type Repository interface {
 	DeletePost(userID uint, postID uint) error
 	GetPostByPostID(PostID uint) (Posting, error)
 	GetPostByUsername(Username string) ([]Posting, error)
-	LikePost(postID uint) error
+	LikePosts(userID, postID uint, updatePosting Posting) (Posting, error)
 }

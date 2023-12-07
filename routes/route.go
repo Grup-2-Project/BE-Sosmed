@@ -37,7 +37,7 @@ func routePosting(e *echo.Echo, ph postings.Handler) {
 	e.GET("/posts/:username", ph.GetByUsername())
 	e.PUT("/posts/:id", ph.Update(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 	e.DELETE("/posts/:id", ph.Delete(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
-	e.POST("/posts/:id/", ph.LikePost(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
+	e.POST("/posts/:id", ph.LikePost(), echojwt.JWT([]byte("$!1gnK3yyy!!!")))
 }
 
 func routeComment(e *echo.Echo, ch comments.Handler) {

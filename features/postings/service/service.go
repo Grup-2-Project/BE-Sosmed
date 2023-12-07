@@ -171,6 +171,17 @@ func (ps *PostingService) AmbilPostingByUsername(Username string) ([]postings.Po
 	return posts, nil
 }
 
-func (ps *PostingService) LikePosting(postID uint) error {
-	return ps.m.LikePost(postID)
+
+func (ps *PostingService) LikePosting(token *golangjwt.Token, postID uint) (postings.Posting, error) {
+    userID, err := jwt.ExtractToken(token)
+    if err != nil {
+        return postings.Posting{}, err
+    }
+
+    result, err := ps.m.LikePosts(userID, postID, postings.Posting{})
+    if err != nil {
+        return postings.Posting{}, err
+    }
+
+    return result, nil
 }
