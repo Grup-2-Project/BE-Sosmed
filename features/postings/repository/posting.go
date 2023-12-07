@@ -5,6 +5,7 @@ import (
 	cr "BE-Sosmed/features/comments/repository"
 	"BE-Sosmed/features/postings"
 	"errors"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -13,7 +14,7 @@ type PostingModel struct {
 	gorm.Model
 	Artikel  string
 	Gambar   string
-	Likes int
+	Likes    int
 	UserID   uint
 	Comments []cr.CommentModel `gorm:"foreignKey:PostID"`
 }
@@ -63,11 +64,15 @@ func (pq *postingQuery) GetComment(PostID uint) ([]comments.Comment, error) {
 	return result, nil
 }
 
-func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {
+func (pq *postingQuery) GetAllPost(page int64, pageSize int64) ([]postings.Posting, postings.Pagination, error) {
 	var posts []PostingModel
 
-	if err := pq.db.Order("created_at desc").Find(&posts).Error; err != nil {
-		return nil, err
+	var totalRecords int64
+	pq.db.Model(&PostingModel{}).Count(&totalRecords)
+
+	var offset = (page - 1) * pageSize
+	if err := pq.db.Offset(int(offset)).Limit(int(pageSize)).Order("created_at desc").Find(&posts).Error; err != nil {
+		return nil, postings.Pagination{}, err
 	}
 
 	var result []postings.Posting
@@ -76,12 +81,36 @@ func (pq *postingQuery) GetAllPost() ([]postings.Posting, error) {
 			ID:      post.ID,
 			Artikel: post.Artikel,
 			Gambar:  post.Gambar,
-			Likes: post.Likes,
+			Likes:   post.Likes,
 			UserID:  post.UserID,
 		})
 	}
 
-	return result, nil
+	var totalPages = (totalRecords + pageSize - 1) / pageSize
+
+	var nextPage *int64
+	if page < totalPages {
+		nextPage = new(int64)
+		*nextPage = page + 1
+		log.Println("Next page:", *nextPage)
+	}
+
+	var prevPage *int64
+	if page > 1 {
+		prevPage = new(int64)
+		*prevPage = page - 1
+		log.Println("Previous page:", *prevPage)
+	}
+
+	var pagination = postings.Pagination{
+		TotalRecords: totalRecords,
+		CurrentPage:  page,
+		TotalPages:   totalPages,
+		NextPage:     *nextPage,
+		PrevPage:     prevPage,
+	}
+
+	return result, pagination, nil
 }
 
 func (pq *postingQuery) UpdatePost(userID uint, updatePosting postings.Posting) (postings.Posting, error) {
