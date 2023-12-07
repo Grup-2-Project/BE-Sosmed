@@ -2,6 +2,7 @@ package postings
 
 import (
 	"BE-Sosmed/features/comments"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 
@@ -9,13 +10,14 @@ import (
 )
 
 type Posting struct {
-	ID       uint
-	Artikel  string
-	Gambar   string
-	Likes    int
-	UserID   uint
-	Username string
-	Image    string
+	ID        uint
+	Artikel   string
+	Gambar    string
+	Likes     int
+	UserID    uint
+	Username  string
+	Image     string
+	CreatedAt time.Time
 }
 
 type Pagination struct {

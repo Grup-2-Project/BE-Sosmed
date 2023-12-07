@@ -54,10 +54,11 @@ func (pq *postingQuery) GetComment(PostID uint) ([]comments.Comment, error) {
 	var result []comments.Comment
 	for _, model := range commentModels {
 		result = append(result, comments.Comment{
-			ID:       model.ID,
-			Komentar: model.Komentar,
-			PostID:   model.PostID,
-			UserID:   model.UserID,
+			ID:        model.ID,
+			Komentar:  model.Komentar,
+			PostID:    model.PostID,
+			UserID:    model.UserID,
+			CreatedAt: model.CreatedAt,
 		})
 	}
 
@@ -74,10 +75,11 @@ func (pq *postingQuery) GetCommentForDetailPost(PostID uint) ([]comments.Comment
 	var result []comments.Comment
 	for _, model := range commentModels {
 		result = append(result, comments.Comment{
-			ID:       model.ID,
-			Komentar: model.Komentar,
-			PostID:   model.PostID,
-			UserID:   model.UserID,
+			ID:        model.ID,
+			Komentar:  model.Komentar,
+			PostID:    model.PostID,
+			UserID:    model.UserID,
+			CreatedAt: model.CreatedAt,
 		})
 	}
 
@@ -98,11 +100,12 @@ func (pq *postingQuery) GetAllPost(page int64, pageSize int64) ([]postings.Posti
 	var result []postings.Posting
 	for _, post := range posts {
 		result = append(result, postings.Posting{
-			ID:      post.ID,
-			Artikel: post.Artikel,
-			Gambar:  post.Gambar,
-			Likes:   post.Likes,
-			UserID:  post.UserID,
+			ID:        post.ID,
+			Artikel:   post.Artikel,
+			Gambar:    post.Gambar,
+			Likes:     post.Likes,
+			UserID:    post.UserID,
+			CreatedAt: post.CreatedAt,
 		})
 	}
 
@@ -187,10 +190,11 @@ func (pq *postingQuery) GetPostByPostID(PostID uint) (postings.Posting, error) {
 	}
 
 	result := postings.Posting{
-		ID:      post.ID,
-		Artikel: post.Artikel,
-		Gambar:  post.Gambar,
-		UserID:  post.UserID,
+		ID:        post.ID,
+		Artikel:   post.Artikel,
+		Gambar:    post.Gambar,
+		UserID:    post.UserID,
+		CreatedAt: post.CreatedAt,
 	}
 
 	return result, nil
@@ -212,10 +216,11 @@ func (pq *postingQuery) GetPostByUsername(Username string) ([]postings.Posting, 
 	var result []postings.Posting
 	for _, post := range posts {
 		result = append(result, postings.Posting{
-			ID:      post.ID,
-			Artikel: post.Artikel,
-			Gambar:  post.Gambar,
-			UserID:  post.UserID,
+			ID:        post.ID,
+			Artikel:   post.Artikel,
+			Gambar:    post.Gambar,
+			UserID:    post.UserID,
+			CreatedAt: post.CreatedAt,
 		})
 	}
 

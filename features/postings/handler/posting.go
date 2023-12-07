@@ -126,22 +126,24 @@ func (pc *PostingHandler) GetAll() echo.HandlerFunc {
 			var commentInfo = make([]CommentInfo, len(comments))
 			for j, comment := range comments {
 				commentInfo[j] = CommentInfo{
-					ID:       comment.ID,
-					Komentar: comment.Komentar,
-					PostID:   comment.PostID,
-					Username: comment.Username,
-					Image:    comment.Image,
+					ID:        comment.ID,
+					Komentar:  comment.Komentar,
+					PostID:    comment.PostID,
+					Username:  comment.Username,
+					Image:     comment.Image,
+					CreatedAt: comment.CreatedAt,
 				}
 			}
 
 			response[i] = GetResponse{
-				ID:       post.ID,
-				Artikel:  post.Artikel,
-				Gambar:   post.Gambar,
-				Likes:    post.Likes,
-				Username: post.Username,
-				Image:    post.Image,
-				Comments: commentInfo,
+				ID:        post.ID,
+				Artikel:   post.Artikel,
+				Gambar:    post.Gambar,
+				Likes:     post.Likes,
+				Username:  post.Username,
+				Image:     post.Image,
+				CreatedAt: post.CreatedAt,
+				Comments:  commentInfo,
 			}
 		}
 
@@ -247,21 +249,23 @@ func (pc *PostingHandler) GetByPostID() echo.HandlerFunc {
 		var commentInfo = make([]CommentInfo, len(comments))
 		for j, comment := range comments {
 			commentInfo[j] = CommentInfo{
-				ID:       comment.ID,
-				Komentar: comment.Komentar,
-				PostID:   comment.PostID,
-				Username: comment.Username,
-				Image:    comment.Image,
+				ID:        comment.ID,
+				Komentar:  comment.Komentar,
+				PostID:    comment.PostID,
+				Username:  comment.Username,
+				Image:     comment.Image,
+				CreatedAt: comment.CreatedAt,
 			}
 		}
 
 		response := GetResponse{
-			ID:       post.ID,
-			Artikel:  post.Artikel,
-			Gambar:   post.Gambar,
-			Username: post.Username,
-			Image:    post.Image,
-			Comments: commentInfo,
+			ID:        post.ID,
+			Artikel:   post.Artikel,
+			Gambar:    post.Gambar,
+			Username:  post.Username,
+			Image:     post.Image,
+			CreatedAt: post.CreatedAt,
+			Comments:  commentInfo,
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
@@ -296,21 +300,23 @@ func (pc *PostingHandler) GetByUsername() echo.HandlerFunc {
 			var commentInfo = make([]CommentInfo, len(comments))
 			for j, comment := range comments {
 				commentInfo[j] = CommentInfo{
-					ID:       comment.ID,
-					Komentar: comment.Komentar,
-					PostID:   comment.PostID,
-					Username: comment.Username,
-					Image:    comment.Image,
+					ID:        comment.ID,
+					Komentar:  comment.Komentar,
+					PostID:    comment.PostID,
+					Username:  comment.Username,
+					CreatedAt: comment.CreatedAt,
+					Image:     comment.Image,
 				}
 			}
 
 			response[i] = GetResponse{
-				ID:       post.ID,
-				Artikel:  post.Artikel,
-				Gambar:   post.Gambar,
-				Username: post.Username,
-				Image:    post.Image,
-				Comments: commentInfo,
+				ID:        post.ID,
+				Artikel:   post.Artikel,
+				Gambar:    post.Gambar,
+				Username:  post.Username,
+				Image:     post.Image,
+				CreatedAt: post.CreatedAt,
+				Comments:  commentInfo,
 			}
 		}
 
