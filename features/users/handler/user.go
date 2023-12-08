@@ -135,7 +135,6 @@ func (uh *userHandler) Login() echo.HandlerFunc {
 
 func (uh *userHandler) ReadById() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// Ambil ID dari path parameter
 		userID := c.Param("id")
 
 		// Konversi string ID ke uint
@@ -146,7 +145,6 @@ func (uh *userHandler) ReadById() echo.HandlerFunc {
 			})
 		}
 
-		// Panggil service untuk mendapatkan data user berdasarkan ID
 		result, err := uh.s.GetUserById(uint(id))
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]any{
@@ -154,7 +152,6 @@ func (uh *userHandler) ReadById() echo.HandlerFunc {
 			})
 		}
 
-		// Kembalikan data user dalam response
 		var response = new(RegisterResponse)
 		response.Username = result.Username
 		response.FirstName = result.FirstName
@@ -168,7 +165,6 @@ func (uh *userHandler) ReadById() echo.HandlerFunc {
 
 func (uh *userHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// Ambil data user yang akan diupdate dari body request
 		var updateRequest = new(RegisterRequest)
 		if err := c.Bind(updateRequest); err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -213,7 +209,6 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 
 		}
 
-		// Panggil service untuk melakukan update user
 		updatedUser, err := uh.s.PutUser(c.Get("user").(*gojwt.Token), *inputProcess)
 
 		if err != nil {
@@ -222,7 +217,6 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 			})
 		}
 
-		// Kembalikan data user yang telah diupdate dalam response
 		var response = new(RegisterResponse)
 		response.Username = updatedUser.Username
 		response.FirstName = updatedUser.FirstName
@@ -244,7 +238,6 @@ func (uh *userHandler) Delete() echo.HandlerFunc {
 			})
 		}
 
-		// Kembalikan response berhasil
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "delete data success",
 		})
@@ -260,6 +253,19 @@ func (uh *userHandler) ReadByUsername() echo.HandlerFunc {
 				"message": "Failed to get user",
 			})
 		}
-		return c.JSON(http.StatusOK, user)
+		var response = new(GetResponse)
+		response.Username = user.Username
+		response.FirstName = user.FirstName
+		response.LastName = user.LastName
+		response.Email = user.Email
+		response.Gender = user.Gender
+		response.Hp = user.Hp
+		response.CreatedAt = user.CreatedAt
+		response.Image = user.Image
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "read data success",
+			"data":    response,
+		})
 	}
 }

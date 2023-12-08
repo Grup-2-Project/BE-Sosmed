@@ -1,6 +1,8 @@
 package users
 
 import (
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
@@ -15,6 +17,7 @@ type User struct {
 	Password  string
 	Image     string
 	Username  string
+	CreatedAt time.Time
 }
 
 type Handler interface {
