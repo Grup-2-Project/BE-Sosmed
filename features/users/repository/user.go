@@ -133,8 +133,8 @@ func (uq *userQuery) ReadUserByUsername(username string) (users.User, error) {
 		Gender:    user.Gender,
 		Hp:        user.Hp,
 		Email:     user.Email,
-		Password:  user.Password,
 		Image:     user.Image,
 		Username:  user.Username,
+		CreatedAt: user.CreatedAt,
 	}, nil
 }

@@ -1,5 +1,7 @@
 package handler
 
+import "time"
+
 type RegisterRequest struct {
 	FirstName string `json:"nama_depan" form:"nama_depan" validate:"required,alpha"`
 	LastName  string `json:"nama_belakang" form:"nama_belakang" validate:"required,alpha"`
@@ -28,11 +30,12 @@ type LoginResponse struct {
 }
 
 type GetResponse struct {
-	FirstName string `json:"nama_depan"`
-	LastName  string `json:"nama_belakang"`
-	Gender    string `json:"gender"`
-	Hp        string `json:"hp"`
-	Email     string `json:"email"`
-	Username  string `json:"username"`
-	Image     string `json:"foto_profil" form:"foto_profil"`
+	Username  string    `json:"username"`
+	FirstName string    `json:"nama_depan"`
+	LastName  string    `json:"nama_belakang"`
+	Gender    string    `json:"gender"`
+	Hp        string    `json:"hp"`
+	Email     string    `json:"email"`
+	Image     string    `json:"foto_profil" form:"foto_profil"`
+	CreatedAt time.Time `json:"created_at"`
 }
